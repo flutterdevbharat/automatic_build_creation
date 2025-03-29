@@ -11,7 +11,7 @@ on:
 jobs:
   build-android:
     name: Build Android APK on Windows
-    runs-on: windows-latest  # Running on Windows
+    runs-on: ubuntu-latest  # Running on Windows
 
     steps:
       - name: Checkout Repository
