@@ -3,7 +3,7 @@ name: Flutter Android Build on Windows
 on:
   push:
     branches:
-      - main  # Change to your desired branch
+      - main
   pull_request:
     branches:
       - main
