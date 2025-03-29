@@ -11,7 +11,7 @@ on:
 jobs:
   build-android:
     name: Build Android APK on Windows
-    runs-on: ubuntu-latest  # Running on Windows
+    runs-on: windows-latest  # ✅ Use Windows runner
 
     steps:
       - name: Checkout Repository
@@ -45,7 +45,7 @@ jobs:
         run: flutter build apk --release
 
       - name: Upload APK Artifact
-        uses: actions/upload-artifact@v4  # Updated from v3 to v4
+        uses: actions/upload-artifact@v4  # ✅ Fix: Use v4
         with:
           name: release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
@@ -54,7 +54,7 @@ jobs:
         run: flutter build appbundle
 
       - name: Upload AAB Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4  # ✅ Fix: Use v4
         with:
           name: release-aab
           path: build/app/outputs/bundle/release/app-release.aab
