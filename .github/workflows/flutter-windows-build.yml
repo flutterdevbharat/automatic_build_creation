@@ -50,11 +50,23 @@ jobs:
           name: release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
 
-      - name: Build App Bundle (AAB)
-        run: flutter build appbundle
-
-      - name: Upload AAB Artifact
-        uses: actions/upload-artifact@v4  # ✅ Fix: Use v4
+      - name: Create GitHub Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
         with:
-          name: release-aab
-          path: build/app/outputs/bundle/release/app-release.aab
+          token: ${{ secrets.AUTOMATION }}
+          tag_name: ${{ github.ref_name }}
+          name: "Release ${{ github.ref_name }}"
+          draft: false
+          prerelease: false
+          files: |
+            build/app/outputs/flutter-apk/app-release.apk
+
+#      - name: Build App Bundle (AAB)
+#        run: flutter build appbundle
+#
+#      - name: Upload AAB Artifact
+#        uses: actions/upload-artifact@v4  # ✅ Fix: Use v4
+#        with:
+#          name: release-aab
+#          path: build/app/outputs/bundle/release/app-release.aab
