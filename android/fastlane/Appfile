@@ -1,0 +1,2 @@
+json_key_file("/Users/bspbharat/Documents/GitHub/automatic_build_creation/android/bubbly-clarity-455412-s8-76f210b57621.json") # Path to the json secret file - Follow https://docs.fastlane.tools/actions/supply/#setup to get one
+package_name("com.example.animation_demo") # e.g. com.krausefx.app
