@@ -1,0 +1,32 @@
+//def keystorePropertiesFile = rootProject.file("key.properties")
+//def keystoreProperties = new Properties()
+//keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+
+android {
+    signingConfigs {
+        bundle {
+//            keyAlias keystoreProperties['keyAlias']
+//            keyPassword keystoreProperties['keyPassword']
+//            storeFile file(keystoreProperties['storeFile'])
+//            storePassword keystoreProperties['storePassword']
+        }
+    }
+
+    def flavorType = "flavor-type"
+
+    flavorDimensions flavorType
+
+    productFlavors {
+        staging {
+            dimension flavorType
+            signingConfig signingConfigs.bundle
+        }
+        prod {
+            dimension flavorType
+            signingConfig signingConfigs.bundle
+        }
+
+
+    }
+}
