@@ -38,7 +38,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: release-apk
-          path: build/app/outputs/flutter-apk/*.apk  # ✅ Uploads all APKs
+          path: build/app/outputs/flutter-apk/app-armeabi-v7a-staging-release.apk
 
       - name: Create GitHub Release
         id: create_release
@@ -50,7 +50,7 @@ jobs:
           draft: false
           prerelease: false
           files: |
-            build/app/outputs/flutter-apk/*.apk  # ✅ Includes all APKs in the release
+            build/app/outputs/flutter-apk/app-armeabi-v7a-staging-release.apk
 
 
 #name: Flutter Android Build on Windows
