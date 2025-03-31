@@ -10,8 +10,8 @@ on:
 
 jobs:
   build-android:
-    name: Build Android APK on Windows
-    runs-on: windows-latest  # ✅ Use Windows runner
+    name: Build Android APK on MAC
+    runs-on: macos-latest  # ✅ Use MAC runner
 
     steps:
       - name: Checkout Repository
