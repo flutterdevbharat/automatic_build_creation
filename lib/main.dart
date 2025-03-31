@@ -1,17 +1,23 @@
+import 'package:animation_demo/flavor_config.dart';
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const MyApp());
+void mainCommon(FlavorConfig flavorConfig) {
+  runApp(MyApp(
+    flavorConfig: flavorConfig,
+  ));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  FlavorConfig flavorConfig;
+
+  MyApp({super.key, required this.flavorConfig});
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -28,7 +34,10 @@ class MyApp extends StatelessWidget {
         //
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: flavorConfig.flavorId == "prod"
+            ? ColorScheme.fromSeed(seedColor: Colors.deepPurple)
+            : ColorScheme.fromSeed(seedColor: Colors.deepOrange),
+        useMaterial3: true,
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
@@ -104,7 +113,9 @@ class _MyHomePageState extends State<MyHomePage> {
           // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text('You have pushed the button this many times:'),
+            const Text(
+              'You have pushed the button this many times:',
+            ),
             Text(
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,

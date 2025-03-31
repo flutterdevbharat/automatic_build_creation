@@ -10,8 +10,8 @@ on:
 
 jobs:
   build-android:
-    name: Build Android APK on MAC
-    runs-on: macos-latest  # ✅ Use Windows runner
+    name: Build Android APK on Windows
+    runs-on: windows-latest  # ✅ Use Windows runner
 
     steps:
       - name: Checkout Repository
@@ -31,29 +31,14 @@ jobs:
       - name: Install Dependencies
         run: flutter pub get
 
-#      - name: Run Flutter Analyzer
-#        run: flutter analyze
-#
-#      - name: Run Flutter Tests
-#        run: flutter test
+      - name: Build APK (Split Per ABI)
+        run: flutter build apk --split-per-abi --flavor staging -t lib/flavor_entry_points/main_stage.dart
 
-#      - name: Set up Java (Required for Android builds)
-#        uses: actions/setup-java@v3
-#        with:
-#          distribution: 'zulu'  # Using Azul Zulu JDK
-#          java-version: '17'  # Use Java 17 (required for latest Android builds)
-
-#      - name: Accept Android Licenses
-#        run: flutter doctor --android-licenses
-
-      - name: Build Android APK
-        run: flutter build apk --release
-
-      - name: Upload APK Artifact
-        uses: actions/upload-artifact@v4  # ✅ Fix: Use v4
+      - name: Upload APK Artifacts
+        uses: actions/upload-artifact@v4
         with:
           name: release-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+          path: build/app/outputs/flutter-apk/app-armeabi-v7a-staging-release.apk
 
       - name: Create GitHub Release
         id: create_release
@@ -65,13 +50,85 @@ jobs:
           draft: false
           prerelease: false
           files: |
-            build/app/outputs/flutter-apk/app-release.apk
+            build/app/outputs/flutter-apk/app-armeabi-v7a-staging-release.apk
 
-#      - name: Build App Bundle (AAB)
-#        run: flutter build appbundle
+
+#name: Flutter Android Build on Windows
 #
-#      - name: Upload AAB Artifact
+#on:
+#  push:
+#    branches:
+#      - main
+#  pull_request:
+#    branches:
+#      - main
+#
+#jobs:
+#  build-android:
+#    name: Build Android APK on MAC
+#    runs-on: macos-latest  # ✅ Use Windows runner
+#
+#    steps:
+#      - name: Checkout Repository
+#        uses: actions/checkout@v4
+#
+#      - name: Setup Java
+#        uses: actions/setup-java@v4
+#        with:
+#          distribution: 'temurin'
+#          java-version: '17'
+#
+#      - name: Setup Flutter
+#        uses: subosito/flutter-action@v2
+#        with:
+#          flutter-version: '3.27.2'
+#
+#      - name: Install Dependencies
+#        run: flutter pub get
+#
+##      - name: Run Flutter Analyzer
+##        run: flutter analyze
+##
+##      - name: Run Flutter Tests
+##        run: flutter test
+#
+##      - name: Set up Java (Required for Android builds)
+##        uses: actions/setup-java@v3
+##        with:
+##          distribution: 'zulu'  # Using Azul Zulu JDK
+##          java-version: '17'  # Use Java 17 (required for latest Android builds)
+#
+##      - name: Accept Android Licenses
+##        run: flutter doctor --android-licenses
+#
+##      - name: Build Android APK
+##        run: flutter build apk --release
+#      - name: Build APK (Split Per ABI)
+#        run: flutter build apk --split-per-abi --flavor staging -t lib/flavor_entry_points/main_stage.dart
+#
+#      - name: Upload APK Artifact
 #        uses: actions/upload-artifact@v4  # ✅ Fix: Use v4
 #        with:
-#          name: release-aab
-#          path: build/app/outputs/bundle/release/app-release.aab
+#          name: release-apk
+#          path: build/app/outputs/flutter-apk/app-release.apk
+#
+#      - name: Create GitHub Release
+#        id: create_release
+#        uses: softprops/action-gh-release@v1
+#        with:
+#          token: ${{ secrets.AUTOMATION }}
+#          tag_name: ${{ github.ref_name }}
+#          name: "Release ${{ github.ref_name }}"
+#          draft: false
+#          prerelease: false
+#          files: |
+#            build/app/outputs/flutter-apk/app-release.apk
+#
+##      - name: Build App Bundle (AAB)
+##        run: flutter build appbundle
+##
+##      - name: Upload AAB Artifact
+##        uses: actions/upload-artifact@v4  # ✅ Fix: Use v4
+##        with:
+##          name: release-aab
+##          path: build/app/outputs/bundle/release/app-release.aab
