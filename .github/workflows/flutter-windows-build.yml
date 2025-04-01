@@ -1,4 +1,4 @@
-name: Flutter Android Build on Windows
+name: Flutter Android Build & Play Store Deployment
 
 on:
   push:
@@ -10,8 +10,8 @@ on:
 
 jobs:
   build-android:
-    name: Build Android APK on Windows
-    runs-on: windows-latest  # ✅ Use Windows runner
+    name: Build and Deploy to Play Store
+    runs-on: macos-latest  # ✅ Use macOS for Flutter & Fastlane
 
     steps:
       - name: Checkout Repository
@@ -31,14 +31,32 @@ jobs:
       - name: Install Dependencies
         run: flutter pub get
 
-      - name: Build APK (Split Per ABI)
-        run: flutter build apk --split-per-abi --flavor staging -t lib/flavor_entry_points/main_stage.dart
+      - name: Decode Keystore File
+        run: |
+          echo "${{ secrets.KEYSTORE_B64 }}" | base64 --decode > android/app/upload-keystore.jks
+        shell: bash
 
-      - name: Upload APK Artifacts
+      - name: Decode Google Play JSON Key
+        run: |
+          echo "${{ secrets.GOOGLE_PLAY_JSON }}" > android/bubbly-clarity-455412-s8-76f210b57621.json
+        shell: bash
+
+      - name: Build AAB (Play Store Bundle)
+        run: flutter build appbundle --flavor staging -t lib/flavor_entry_points/main_stage.dart
+
+      - name: Upload AAB Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: release-apk
-          path: build/app/outputs/flutter-apk/app-armeabi-v7a-staging-release.apk
+          name: release-aab
+          path: build/app/outputs/bundle/stagingRelease/app-staging-release.aab
+
+      - name: Install Fastlane
+        run: gem install fastlane
+
+      - name: Deploy to Google Play Store
+        env:
+          GOOGLE_PLAY_JSON: ${{ secrets.GOOGLE_PLAY_JSON }}
+        run: fastlane android deploy
 
       - name: Create GitHub Release
         id: create_release
@@ -50,7 +68,65 @@ jobs:
           draft: false
           prerelease: false
           files: |
-            build/app/outputs/flutter-apk/app-armeabi-v7a-staging-release.apk
+            build/app/outputs/bundle/stagingRelease/app-staging-release.aab
+            
+
+# 31 march 6:45
+#name: Flutter Android Build on Windows
+#
+#on:
+#  push:
+#    branches:
+#      - main
+#  pull_request:
+#    branches:
+#      - main
+#
+#jobs:
+#  build-android:
+#    name: Build Android APK on MAC
+#    runs-on: macos-latest  # ✅ Use MAC runner
+#
+#    steps:
+#      - name: Checkout Repository
+#        uses: actions/checkout@v4
+#
+#      - name: Setup Java
+#        uses: actions/setup-java@v4
+#        with:
+#          distribution: 'temurin'
+#          java-version: '17'
+#
+#      - name: Setup Flutter
+#        uses: subosito/flutter-action@v2
+#        with:
+#          flutter-version: '3.27.2'
+#
+#      - name: Install Dependencies
+#        run: flutter pub get
+#
+#      - name: Build APK (Split Per ABI)
+#        run: flutter build apk --split-per-abi --flavor staging -t lib/flavor_entry_points/main_stage.dart
+#
+#      - name: Upload APK Artifacts
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: release-apk
+#          path: build/app/outputs/flutter-apk/app-armeabi-v7a-staging-release.apk
+#
+#      - name: Create GitHub Release
+#        id: create_release
+#        uses: softprops/action-gh-release@v1
+#        with:
+#          token: ${{ secrets.AUTOMATION }}
+#          tag_name: ${{ github.ref_name }}
+#          name: "Release ${{ github.ref_name }}"
+#          draft: false
+#          prerelease: false
+#          files: |
+#            build/app/outputs/flutter-apk/app-armeabi-v7a-staging-release.apk
+            
+
 
 
 #name: Flutter Android Build on Windows
