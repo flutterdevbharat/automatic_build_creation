@@ -33,12 +33,12 @@ jobs:
 
       - name: Decode Keystore File
         run: |
-          echo "${{ secrets.KEYSTORE_B64 }}" | base64 --decode > android/app/upload-keystore.jks
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > android/app/upload-keystore.jks
         shell: bash
 
       - name: Decode Google Play JSON Key
         run: |
-          echo "${{ secrets.GOOGLE_PLAY_JSON }}" > android/bubbly-clarity-455412-s8-76f210b57621.json
+          echo "${{ secrets.GOOGLE_PLAY_JSON }}" > android/bubbly-clarity-455412.json
         shell: bash
 
       - name: Build AAB (Play Store Bundle)
@@ -50,13 +50,20 @@ jobs:
           name: release-aab
           path: build/app/outputs/bundle/stagingRelease/app-staging-release.aab
 
-      - name: Install Fastlane
-        run: gem install fastlane
+      - name: Install Bundler and Fastlane
+        run: |
+          gem install bundler
+          bundle install
+        shell: bash
 
       - name: Deploy to Google Play Store
         env:
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          ANDROID_STORE_PASSWORD: ${{ secrets.ANDROID_STORE_PASSWORD }}
           GOOGLE_PLAY_JSON: ${{ secrets.GOOGLE_PLAY_JSON }}
-        run: fastlane android deploy
+          FASTLANE_SKIP_INTERACTIVE: "true"
+        run: bundle exec fastlane android deploy
 
       - name: Create GitHub Release
         id: create_release
@@ -69,7 +76,6 @@ jobs:
           prerelease: false
           files: |
             build/app/outputs/bundle/stagingRelease/app-staging-release.aab
-            
 
 # 31 march 6:45
 #name: Flutter Android Build on Windows
