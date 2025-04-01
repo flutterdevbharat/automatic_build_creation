@@ -1,4 +1,4 @@
-name: Flutter Android Build on Windows
+name: Flutter Android Build & Play Store Deployment
 
 on:
   push:
@@ -10,8 +10,8 @@ on:
 
 jobs:
   build-android:
-    name: Build Android APK on IOS
-    runs-on: macos-latest  # ✅ Use Windows runner
+    name: Build and Deploy to Play Store
+    runs-on: macos-latest  # ✅ Use macOS for Flutter & Fastlane
 
     steps:
       - name: Checkout Repository
