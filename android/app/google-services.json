@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "741942777606",
+    "project_id": "myflutterapp-93f5a",
+    "storage_bucket": "myflutterapp-93f5a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:741942777606:android:89245ce248e886bbed7087",
+        "android_client_info": {
+          "package_name": "com.example.animation_demo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyClD-aHiwGGkOlOvachoLc6PaED9t8OPg8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
